@@ -1,4 +1,4 @@
-package main.java.ua.voida;
+package ua.voida;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
