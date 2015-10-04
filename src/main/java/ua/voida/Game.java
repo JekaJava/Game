@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Random;
 
 /**
@@ -90,7 +91,7 @@ public class Game {
         return count;
     }
 
-    public static void delete(byte[] bullCowArray, ArrayList<String> listDigit, String digit ) {
+    public static void delete(byte[] bullCowArray, List<String> listDigit, String digit ) {
         int count = bullCowArray[0] + bullCowArray[1];
         switch (count) {
             case 4 : {
@@ -145,27 +146,49 @@ public class Game {
         } while (bull < 4);
     }
 
-    public static void computerGame() {
-        ArrayList<String> listDigit = new ArrayList<>();
-        while (listDigit.size() < 5040) {
-            String digit = digitString();
-            if (!listDigit.contains(digit)) {
-                listDigit.add(digit);
+    public static boolean isUniqueDigits(int number) {
+        boolean[] existingDigits = new boolean[10];
+        for (int i = 0; i < 4; i++) {
+            int digit = number % 10;
+            if (existingDigits[digit]) {
+                return false;
+            } else {
+                existingDigits[digit] = true;
+            }
+            number /= 10;
+        }
+        return true;
+    }
+
+    public static List<String> find() {
+        List<String> res = new ArrayList<>();
+        for (int i = 0; i < 10000; i++) {
+            if (isUniqueDigits(i)) {
+                String s = Integer.toString(i);
+                if (s.length() < 4) {
+                    s = "0" + s;
+                }
+                res.add(s);
             }
         }
+        return res;
+    }
+    public static void computerGame() {
         byte[] computerDigit = unknownDigit();
         outDigit(computerDigit);
         Random random = new Random();
         byte[] bull;
         int step = 0;
         String digit;
+        List<String> list = new ArrayList<>(find());
         do {
-            digit = listDigit.get(random.nextInt(listDigit.size()));
-            bull = bullCow(computerDigit, digit );
-            delete(bull, listDigit, digit);
-            step++;
-            System.out.println("step : " + step);
-        } while (bull[0] < 4);
+                digit = list.get(random.nextInt(list.size()));
+                bull = bullCow(computerDigit, digit);
+                delete(bull, list, digit);
+                step++;
+                System.out.println("step : " + step);
+            } while (bull[0] < 4);
+
 
     }
 }
